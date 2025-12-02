@@ -37,9 +37,16 @@ public class SpringSecurityConfig {
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http.authorizeHttpRequests(authz -> {
+        return http
+                .authorizeHttpRequests(authz -> {
                     authz
-                            // Endpoints de usuarios (públicos)
+                            // Swagger UI y OpenAPI
+                            .requestMatchers("/v3/api-docs/**", "/swagger-ui/**", "/swagger-ui.html").permitAll()
+
+                            // H2 Console (para desarrollo)
+                            .requestMatchers("/h2-console/**").permitAll()
+
+                            // Endpoints de usuarios
                             .requestMatchers(HttpMethod.GET, "/api/v1/users").permitAll()
                             .requestMatchers(HttpMethod.POST, "/api/v1/users").permitAll()
                             .requestMatchers(HttpMethod.GET, "/api/v1/users/{id}").permitAll()
@@ -47,28 +54,28 @@ public class SpringSecurityConfig {
                             .requestMatchers(HttpMethod.PUT, "/api/v1/users/{id}").permitAll()
                             .requestMatchers(HttpMethod.DELETE, "/api/v1/users/{id}").permitAll()
 
-                            // Endpoints de emociones (todos públicos)
+                            // Endpoints de emociones
                             .requestMatchers(HttpMethod.GET, "/api/v1/emotions").permitAll()
                             .requestMatchers(HttpMethod.GET, "/api/v1/emotions/{id}").permitAll()
                             .requestMatchers(HttpMethod.POST, "/api/v1/emotions").permitAll()
                             .requestMatchers(HttpMethod.PUT, "/api/v1/emotions/{id}").permitAll()
                             .requestMatchers(HttpMethod.DELETE, "/api/v1/emotions/{id}").permitAll()
 
-                            // Endpoints de sesiones activas (públicos)
+                            // Endpoints de sesiones activas
                             .requestMatchers(HttpMethod.GET, "/api/v1/user-active-sessions").permitAll()
                             .requestMatchers(HttpMethod.GET, "/api/v1/user-active-sessions/{id}").permitAll()
                             .requestMatchers(HttpMethod.POST, "/api/v1/user-active-sessions").permitAll()
                             .requestMatchers(HttpMethod.PUT, "/api/v1/user-active-sessions/{id}").permitAll()
                             .requestMatchers(HttpMethod.DELETE, "/api/v1/user-active-sessions/{id}").permitAll()
 
-                            // Endpoints de registro emocional (públicos)
+                            // Endpoints de registro emocional
                             .requestMatchers(HttpMethod.GET, "/api/v1/emotional-registers").permitAll()
                             .requestMatchers(HttpMethod.GET, "/api/v1/emotional-registers/{id}").permitAll()
                             .requestMatchers(HttpMethod.POST, "/api/v1/emotional-registers").permitAll()
                             .requestMatchers(HttpMethod.PUT, "/api/v1/emotional-registers/{id}").permitAll()
                             .requestMatchers(HttpMethod.DELETE, "/api/v1/emotional-registers/{id}").permitAll()
 
-                            // Cualquier otra petición requiere autenticación
+                            // El resto requiere autenticación
                             .anyRequest().authenticated();
                 })
                 .addFilter(new JwtAuthenticationFilter(authenticationManager()))
@@ -76,8 +83,13 @@ public class SpringSecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+
+                // Necesario para que la consola H2 funcione
+                .headers(headers -> headers.frameOptions(frame -> frame.disable()))
+
                 .build();
     }
+
 
     @Bean
     CorsConfigurationSource corsConfigurationSource() {
