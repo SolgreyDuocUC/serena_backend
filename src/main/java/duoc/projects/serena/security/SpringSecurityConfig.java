@@ -40,12 +40,12 @@ public class SpringSecurityConfig {
         return http.authorizeHttpRequests(authz -> {
                     authz
                             // Endpoints de usuarios (públicos)
-                            .requestMatchers(HttpMethod.GET, "/api/users").permitAll()
-                            .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
-                            .requestMatchers(HttpMethod.GET, "/api/users/{id}").permitAll()
-                            .requestMatchers(HttpMethod.GET, "/api/users/email/{email}").permitAll()
-                            .requestMatchers(HttpMethod.PUT, "/api/users/{id}").permitAll()
-                            .requestMatchers(HttpMethod.DELETE, "/api/users/{id}").permitAll()
+                            .requestMatchers(HttpMethod.GET, "/api/v1/users").permitAll()
+                            .requestMatchers(HttpMethod.POST, "/api/v1/users").permitAll()
+                            .requestMatchers(HttpMethod.GET, "/api/v1/users/{id}").permitAll()
+                            .requestMatchers(HttpMethod.GET, "/api/v1/users/email/{email}").permitAll()
+                            .requestMatchers(HttpMethod.PUT, "/api/v1/users/{id}").permitAll()
+                            .requestMatchers(HttpMethod.DELETE, "/api/v1/users/{id}").permitAll()
 
                             // Endpoints de emociones (todos públicos)
                             .requestMatchers(HttpMethod.GET, "/api/v1/emotions").permitAll()
