@@ -13,6 +13,5 @@ public class UserActiveSession {
     private Integer sessionId = 1;
 
     @Column(name = "id_usuario_activo", nullable = false)
-    private Integer activeUserId;
+    private Long activeUserId;
 }
-

@@ -27,5 +27,18 @@ public class User {
 
     @Column(name = "imagenUsuario")
     private String userImageUri;
-}
 
+    // Métodos requeridos por Spring Security ---
+    public String getUsername() {
+        return this.userEmail; // Spring usa email para login
+    }
+
+    public String getPassword() {
+        return this.userPassword;
+    }
+
+    // Este método devuelve el nombre del usuario
+    public String getName() {
+        return this.userName;
+    }
+}
