@@ -24,6 +24,18 @@ public class AuthController {
         userRepository.save(user);
         return ResponseEntity.ok("Usuario registrado correctamente");
     }
+    
+    // Endpoint temporal para resetear contraseña
+    @PostMapping("/reset-password")
+    public ResponseEntity<?> resetPassword(@RequestParam String email, @RequestParam String newPassword) {
+        User user = userRepository.findByUserEmail(email)
+                .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+        
+        user.setUserPassword(passwordEncoder.encode(newPassword));
+        userRepository.save(user);
+        
+        return ResponseEntity.ok("Contraseña actualizada para: " + email);
+    }
 
 }
 

@@ -20,13 +20,15 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO createUser(UserCreateRequestDTO dto) {
-        if (userRepository.existsByUserEmail(dto.getUserEmail())) {
+        String emailLowerCase = dto.getUserEmail().trim().toLowerCase();
+        
+        if (userRepository.existsByUserEmail(emailLowerCase)) {
             throw new RuntimeException("El correo ya está registrado");
         }
 
         User user = new User();
         user.setUserName(dto.getUserName());
-        user.setUserEmail(dto.getUserEmail());
+        user.setUserEmail(emailLowerCase);  // Guardar en minúsculas
         user.setUserPassword(passwordEncoder.encode(dto.getUserPassword()));
         user.setUserAceptConditions(dto.getUserAceptConditions());
         user.setUserImageUri(dto.getUserImageUri());

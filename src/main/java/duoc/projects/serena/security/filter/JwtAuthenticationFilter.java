@@ -1,7 +1,7 @@
 package duoc.projects.serena.security.filter;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import duoc.projects.serena.model.User;
+import duoc.projects.serena.dto.user.LoginRequestDTO;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import jakarta.servlet.FilterChain;
@@ -35,15 +35,21 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
     public Authentication attemptAuthentication(HttpServletRequest request, HttpServletResponse response)
             throws AuthenticationException {
 
-        User user;
+        LoginRequestDTO loginRequest;
         String username;
         String password;
 
         try {
-            user = new ObjectMapper().readValue(request.getInputStream(), User.class);
-            username = user.getUsername();
-            password = user.getPassword();
+            String body = new String(request.getInputStream().readAllBytes());
+            System.out.println("📨 JSON recibido: " + body);
+            
+            loginRequest = new ObjectMapper().readValue(body, LoginRequestDTO.class);
+            username = loginRequest.getUserEmail().trim().toLowerCase();  // ⚠️ Convertir a minúsculas
+            password = loginRequest.getUserPassword().trim();
+            
+            System.out.println("🔐 Intento de login - Email: [" + username + "]");
         } catch (IOException e) {
+            System.err.println("❌ Error al parsear JSON: " + e.getMessage());
             throw new RuntimeException("Error leyendo las credenciales del usuario", e);
         }
 

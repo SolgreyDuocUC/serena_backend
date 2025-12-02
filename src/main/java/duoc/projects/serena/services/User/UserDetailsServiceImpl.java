@@ -21,11 +21,14 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-
+        
+        System.out.println("🔍 Buscando usuario con email: [" + email + "]");
+        
         User user = userRepository.findByUserEmail(email)
-                .orElseThrow(() ->
-                        new UsernameNotFoundException("No existe usuario con email: " + email)
-                );
+                .orElseThrow(() -> {
+                    System.out.println("❌ Usuario NO encontrado con email: [" + email + "]");
+                    return new UsernameNotFoundException("No existe usuario con email: " + email);
+                });
 
         List<SimpleGrantedAuthority> authorities =
                 List.of(new SimpleGrantedAuthority("ROLE_USER"));

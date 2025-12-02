@@ -13,19 +13,19 @@ public class User {
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "nombreUsuario")
+    @Column(name = "nombre_usuario")
     private String userName;
 
-    @Column(name = "emailUsuario", nullable = false, unique = true)
+    @Column(name = "email_usuario", nullable = false, unique = true)
     private String userEmail;
 
-    @Column(name = "contraseniaUsuario", nullable = false)
+    @Column(name = "contrasenia_usuario", nullable = false)
     private String userPassword;
 
-    @Column(name = "usuarioCondiciones")
+    @Column(name = "usuario_condiciones")
     private Boolean userAceptConditions;
 
-    @Column(name = "imagenUsuario")
+    @Column(name = "imagen_usuario")
     private String userImageUri;
 
     // Métodos requeridos por Spring Security ---

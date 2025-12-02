@@ -49,6 +49,7 @@ public class SpringSecurityConfig {
                             .requestMatchers(HttpMethod.GET, "/api/v1/users/email/{email}").permitAll()
                             .requestMatchers(HttpMethod.PUT, "/api/v1/users/{id}").permitAll()
                             .requestMatchers(HttpMethod.DELETE, "/api/v1/users/{id}").permitAll()
+                            .requestMatchers(HttpMethod.POST, "/api/v1/users/reset-password").permitAll()
 
                             // Endpoints de emociones (todos públicos)
                             .requestMatchers(HttpMethod.GET, "/api/v1/emotions").permitAll()
