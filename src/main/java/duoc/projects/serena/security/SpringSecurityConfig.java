@@ -39,9 +39,6 @@ public class SpringSecurityConfig {
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         return http.authorizeHttpRequests(authz -> {
                     authz
-                            // Swagger UI y OpenAPI
-                            .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
-                            
                             // Endpoints de usuarios (públicos)
                             .requestMatchers(HttpMethod.GET, "/api/v1/users").permitAll()
                             .requestMatchers(HttpMethod.POST, "/api/v1/users").permitAll()
