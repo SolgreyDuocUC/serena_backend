@@ -37,31 +37,45 @@ public class SpringSecurityConfig {
 
     @Bean
     SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        return http.authorizeHttpRequests((authz) -> {
+        return http.authorizeHttpRequests(authz -> {
                     authz
-                            // Endpoints de registro y consulta de usuarios (públicos)
-                            .requestMatchers(HttpMethod.POST, "/api/v1/users/register").permitAll()
+                            // Endpoints de usuarios (públicos)
+                            .requestMatchers(HttpMethod.GET, "/api/users").permitAll()
                             .requestMatchers(HttpMethod.POST, "/api/users").permitAll()
                             .requestMatchers(HttpMethod.GET, "/api/users/{id}").permitAll()
                             .requestMatchers(HttpMethod.GET, "/api/users/email/{email}").permitAll()
-                            // Endpoints de emociones (todos públicos para facilitar CRUD)
+                            .requestMatchers(HttpMethod.PUT, "/api/users/{id}").permitAll()
+                            .requestMatchers(HttpMethod.DELETE, "/api/users/{id}").permitAll()
+
+                            // Endpoints de emociones (todos públicos)
                             .requestMatchers(HttpMethod.GET, "/api/v1/emotions").permitAll()
                             .requestMatchers(HttpMethod.GET, "/api/v1/emotions/{id}").permitAll()
-                            .requestMatchers(HttpMethod.POST, "/api/v1/emotions").permitAll() // Ahora público
-                            .requestMatchers(HttpMethod.PUT, "/api/v1/emotions/{id}").permitAll()  // Ahora público
-                            .requestMatchers(HttpMethod.DELETE, "/api/v1/emotions/{id}").permitAll() // Ahora público
+                            .requestMatchers(HttpMethod.POST, "/api/v1/emotions").permitAll()
+                            .requestMatchers(HttpMethod.PUT, "/api/v1/emotions/{id}").permitAll()
+                            .requestMatchers(HttpMethod.DELETE, "/api/v1/emotions/{id}").permitAll()
+
+                            // Endpoints de sesiones activas (públicos)
+                            .requestMatchers(HttpMethod.GET, "/api/v1/user-active-sessions").permitAll()
+                            .requestMatchers(HttpMethod.GET, "/api/v1/user-active-sessions/{id}").permitAll()
+                            .requestMatchers(HttpMethod.POST, "/api/v1/user-active-sessions").permitAll()
+                            .requestMatchers(HttpMethod.PUT, "/api/v1/user-active-sessions/{id}").permitAll()
+                            .requestMatchers(HttpMethod.DELETE, "/api/v1/user-active-sessions/{id}").permitAll()
+
+                            // Endpoints de registro emocional (públicos)
+                            .requestMatchers(HttpMethod.GET, "/api/v1/emotional-registers").permitAll()
+                            .requestMatchers(HttpMethod.GET, "/api/v1/emotional-registers/{id}").permitAll()
+                            .requestMatchers(HttpMethod.POST, "/api/v1/emotional-registers").permitAll()
+                            .requestMatchers(HttpMethod.PUT, "/api/v1/emotional-registers/{id}").permitAll()
+                            .requestMatchers(HttpMethod.DELETE, "/api/v1/emotional-registers/{id}").permitAll()
+
                             // Cualquier otra petición requiere autenticación
                             .anyRequest().authenticated();
                 })
                 .addFilter(new JwtAuthenticationFilter(authenticationManager()))
                 .addFilter(new JwtValidationFilter(authenticationManager()))
-                .csrf(config ->
-                        config.disable()
-                )
+                .csrf(csrf -> csrf.disable())
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .sessionManagement(management ->
-                        management.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .build();
     }
 

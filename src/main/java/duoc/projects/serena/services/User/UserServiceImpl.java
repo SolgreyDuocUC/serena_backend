@@ -6,7 +6,6 @@ import duoc.projects.serena.exception.UserNotFoundException;
 import duoc.projects.serena.model.User;
 import duoc.projects.serena.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
-
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +20,6 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDTO createUser(UserCreateRequestDTO dto) {
-
         if (userRepository.existsByUserEmail(dto.getUserEmail())) {
             throw new RuntimeException("El correo ya está registrado");
         }
@@ -34,7 +32,6 @@ public class UserServiceImpl implements UserService {
         user.setUserImageUri(dto.getUserImageUri());
 
         User saved = userRepository.save(user);
-
         return toDTO(saved);
     }
 
@@ -50,16 +47,6 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByUserEmail(email)
                 .orElseThrow(() -> new UserNotFoundException("Usuario no encontrado"));
         return toDTO(user);
-    }
-
-    private UserDTO toDTO(User user) {
-        UserDTO dto = new UserDTO();
-        dto.setId(user.getId());
-        dto.setUserName(user.getName()); // Corregido: de user.getUserName() a user.getName()
-        dto.setUserEmail(user.getUserEmail());
-        dto.setUserAceptConditions(user.getUserAceptConditions());
-        dto.setUserImageUri(user.getUserImageUri());
-        return dto;
     }
 
     @Override
@@ -93,5 +80,15 @@ public class UserServiceImpl implements UserService {
             throw new UserNotFoundException("Usuario no encontrado");
         }
         userRepository.deleteById(id);
+    }
+
+    private UserDTO toDTO(User user) {
+        UserDTO dto = new UserDTO();
+        dto.setId(user.getId());
+        dto.setUserName(user.getName());
+        dto.setUserEmail(user.getUserEmail());
+        dto.setUserAceptConditions(user.getUserAceptConditions());
+        dto.setUserImageUri(user.getUserImageUri());
+        return dto;
     }
 }
